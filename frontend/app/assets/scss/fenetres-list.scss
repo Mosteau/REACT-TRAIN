@@ -1,0 +1,79 @@
+@import 'variables';
+
+.fenetres-list {
+  padding: 1.5rem;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 1.875rem;
+      font-weight: bold;
+    }
+  }
+
+  &__simulator-link {
+    @include button-base;
+    background-color: $primary-color;
+    color: $white;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__card {
+    border: 1px solid $gray-medium;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+
+    &:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    &-details {
+      color: $gray-color;
+
+      p {
+        margin-bottom: 0.25rem;
+
+        &.price {
+          font-size: 1.125rem;
+          font-weight: bold;
+          color: $green-text;
+        }
+      }
+    }
+  }
+
+  &__loading, &__error {
+    padding: 1.5rem;
+  }
+}

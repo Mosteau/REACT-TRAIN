@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
 import FenetrePopup from './FenetrePopup';
+import AddFenetreForm from './AddFenetreForm';
+import '../assets/scss/main.scss';
 
 interface Fenetre {
   id: number;
@@ -54,6 +56,26 @@ export default function FenetresList() {
     setCurrentPage(page);
   };
 
+  const handleDeleteFenetre = async (id: number) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/fenetres/${id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error('Erreur lors de la suppression');
+      
+      // Fermer la popup et recharger les données
+      setSelectedFenetre(null);
+      fetchFenetres(currentPage);
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Erreur lors de la suppression');
+    }
+  };
+
+  const handleFenetreAdded = () => {
+    fetchFenetres(currentPage);
+  };
+
   const handleFenetreClick = (fenetre: Fenetre) => {
     setSelectedFenetre(fenetre);
   };
@@ -62,32 +84,24 @@ export default function FenetresList() {
     setSelectedFenetre(null);
   };
 
-  if (loading) return <div className="p-6">Chargement...</div>;
-  if (!fenetresData || !fenetresData.data) return <div className="p-6">Erreur de chargement</div>;
+  if (loading) return <div className="fenetres-list__loading">Chargement...</div>;
+  if (!fenetresData || !fenetresData.data) return <div className="fenetres-list__error">Erreur de chargement</div>;
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Nos Fenêtres</h1>
-        <a 
-          href="/simulator" 
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Simulateur
-        </a>
-      </div>
+    <div className="fenetres-list">
+      <AddFenetreForm onFenetreAdded={handleFenetreAdded} />
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="fenetres-list__grid">
         {fenetresData.data.map((fenetre) => (
           <div 
             key={fenetre.id} 
-            className="border rounded-lg p-4 shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+            className="fenetres-list__card"
             onClick={() => handleFenetreClick(fenetre)}
           >
-            <h3 className="text-xl font-semibold mb-2">{fenetre.type}</h3>
-            <div className="space-y-1 text-gray-600">
+            <h3>{fenetre.type}</h3>
+            <div className="fenetres-list__card-details">
               <p>Dimensions: {fenetre.largeur} x {fenetre.hauteur} cm</p>
-              <p className="text-lg font-bold text-green-600">{fenetre.prix}€</p>
+              <p className="price">{fenetre.prix}€</p>
             </div>
           </div>
         ))}
@@ -102,6 +116,7 @@ export default function FenetresList() {
       <FenetrePopup
         fenetre={selectedFenetre}
         onClose={handleClosePopup}
+        onDelete={handleDeleteFenetre}
       />
     </div>
   );

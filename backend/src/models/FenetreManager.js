@@ -6,7 +6,7 @@ class FenetreManager extends AbstractManager {
   }
 
   async create(fenetre) {
-    const [result] = await this.database.query(
+    const result = await this.database.run(
       "INSERT INTO fenetres (type, largeur, hauteur, prix) VALUES (?, ?, ?, ?)",
       [fenetre.type, fenetre.largeur, fenetre.hauteur, fenetre.prix]
     );
@@ -22,7 +22,7 @@ class FenetreManager extends AbstractManager {
   }
 
   async update(id, fenetre) {
-    const [result] = await this.database.query(
+    const result = await this.database.run(
       "UPDATE fenetres SET type = ?, largeur = ?, hauteur = ?, prix = ? WHERE id = ?",
       [fenetre.type, fenetre.largeur, fenetre.hauteur, fenetre.prix, id]
     );
@@ -30,7 +30,7 @@ class FenetreManager extends AbstractManager {
   }
 
   async delete(id) {
-    const [result] = await this.database.query(
+    const result = await this.database.run(
       "DELETE FROM fenetres WHERE id = ?",
       [id]
     );

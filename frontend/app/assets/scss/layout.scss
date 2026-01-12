@@ -1,0 +1,77 @@
+@import 'variables';
+
+.header {
+  background: $white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.5rem;
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: $primary-color;
+  }
+
+  &__simulator-link {
+    @include button-base;
+    background-color: $primary-color;
+    color: $white;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+}
+
+.footer {
+  background: #1f2937;
+  color: $white;
+  padding: 2rem 1.5rem;
+  margin-top: auto;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  &__links {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+
+    a {
+      color: $white;
+      text-decoration: none;
+
+      &:hover {
+        color: $gray-medium;
+      }
+    }
+  }
+
+  &__copyright {
+    font-size: 0.875rem;
+    color: $gray-medium;
+  }
+}

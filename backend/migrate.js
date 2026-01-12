@@ -3,15 +3,15 @@ const database = require("./database/client");
 
 const createTables = async () => {
   try {
-    await database.query(`
+    await database.run(`
       CREATE TABLE IF NOT EXISTS fenetres (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        type VARCHAR(50) NOT NULL,
-        largeur DECIMAL(5,2) NOT NULL,
-        hauteur DECIMAL(5,2) NOT NULL,
-        prix DECIMAL(8,2) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        type TEXT NOT NULL,
+        largeur REAL NOT NULL,
+        hauteur REAL NOT NULL,
+        prix REAL NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
     console.log("Tables créées avec succès");

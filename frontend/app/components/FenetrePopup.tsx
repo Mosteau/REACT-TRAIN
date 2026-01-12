@@ -11,52 +11,61 @@ interface Fenetre {
 interface FenetrePopupProps {
   fenetre: Fenetre | null;
   onClose: () => void;
+  onDelete: (id: number) => void;
 }
 
-export default function FenetrePopup({ fenetre, onClose }: FenetrePopupProps) {
+export default function FenetrePopup({ fenetre, onClose, onDelete }: FenetrePopupProps) {
   if (!fenetre) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">{fenetre.type}</h2>
+    <div className="fenetre-popup">
+      <div className="fenetre-popup__content">
+        <div className="fenetre-popup__header">
+          <h2>{fenetre.type}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl"
+            className="fenetre-popup__header-close"
           >
             ×
           </button>
         </div>
         
-        <div className="space-y-3">
+        <div className="fenetre-popup__details">
           <div>
-            <span className="font-semibold">Dimensions:</span>
-            <span className="ml-2">{fenetre.largeur} x {fenetre.hauteur} cm</span>
+            <span className="label">Dimensions:</span>
+            <span className="value">{fenetre.largeur} x {fenetre.hauteur} cm</span>
           </div>
           
           <div>
-            <span className="font-semibold">Prix:</span>
-            <span className="ml-2 text-green-600 text-lg font-bold">{fenetre.prix}€</span>
+            <span className="label">Prix:</span>
+            <span className="value value--price">{fenetre.prix}€</span>
           </div>
           
           <div>
-            <span className="font-semibold">Surface:</span>
-            <span className="ml-2">{((fenetre.largeur * fenetre.hauteur) / 10000).toFixed(2)} m²</span>
+            <span className="label">Surface:</span>
+            <span className="value">{((fenetre.largeur * fenetre.hauteur) / 10000).toFixed(2)} m²</span>
           </div>
           
           <div>
-            <span className="font-semibold">Créé le:</span>
-            <span className="ml-2">{new Date(fenetre.created_at).toLocaleDateString('fr-FR')}</span>
+            <span className="label">Créé le:</span>
+            <span className="value">{new Date(fenetre.created_at).toLocaleDateString('fr-FR')}</span>
           </div>
         </div>
         
-        <button
-          onClick={onClose}
-          className="mt-6 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-        >
-          Fermer
-        </button>
+        <div className="fenetre-popup__actions">
+          <button
+            onClick={onClose}
+            className="fenetre-popup__actions button--close"
+          >
+            Fermer
+          </button>
+          <button
+            onClick={() => onDelete(fenetre.id)}
+            className="fenetre-popup__actions button--delete"
+          >
+            Supprimer
+          </button>
+        </div>
       </div>
     </div>
   );

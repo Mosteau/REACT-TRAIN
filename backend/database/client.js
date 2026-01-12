@@ -1,13 +1,26 @@
-const mysql = require("mysql2/promise");
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
-const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
+const dbPath = path.join(__dirname, 'fenetre_db.sqlite');
+const database = new sqlite3.Database(dbPath);
 
-const database = mysql.createPool({
-  host: DB_HOST,
-  port: DB_PORT,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  database: DB_NAME,
-});
+// Promisify database methods
+const query = (sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    database.all(sql, params, (err, rows) => {
+      if (err) reject(err);
+      else resolve([rows]);
+    });
+  });
+};
 
-module.exports = database;
+const run = (sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    database.run(sql, params, function(err) {
+      if (err) reject(err);
+      else resolve({ insertId: this.lastID, affectedRows: this.changes });
+    });
+  });
+};
+
+module.exports = { query, run };

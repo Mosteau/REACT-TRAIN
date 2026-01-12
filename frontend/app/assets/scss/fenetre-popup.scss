@@ -1,0 +1,96 @@
+@import 'variables';
+
+.fenetre-popup {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+
+  &__content {
+    background: $white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    max-width: 28rem;
+    width: 100%;
+    margin: 0 1rem;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    &-close {
+      color: $gray-color;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        color: $gray-hover;
+      }
+    }
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+
+    div {
+      .label {
+        font-weight: 600;
+      }
+
+      .value {
+        margin-left: 0.5rem;
+
+        &--price {
+          color: $green-text;
+          font-size: 1.125rem;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.75rem;
+
+    button {
+      @include button-base;
+      flex: 1;
+      padding: 0.75rem;
+
+      &--close {
+        background-color: $gray-color;
+        color: $white;
+
+        &:hover {
+          background-color: $gray-hover;
+        }
+      }
+
+      &--delete {
+        background-color: $danger-color;
+        color: $white;
+
+        &:hover {
+          background-color: $danger-hover;
+        }
+      }
+    }
+  }
+}

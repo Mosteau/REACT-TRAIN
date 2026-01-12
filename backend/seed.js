@@ -15,7 +15,7 @@ const seedData = async () => {
     ];
 
     for (const fenetre of fenetres) {
-      await database.query(
+      await database.run(
         "INSERT INTO fenetres (type, largeur, hauteur, prix) VALUES (?, ?, ?, ?)",
         [fenetre.type, fenetre.largeur, fenetre.hauteur, fenetre.prix]
       );
