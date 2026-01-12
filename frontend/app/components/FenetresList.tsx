@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
+import FenetrePopup from './FenetrePopup';
 
 interface Fenetre {
   id: number;
@@ -29,6 +30,7 @@ export default function FenetresList() {
   const [fenetresData, setFenetresData] = useState<FenetresResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedFenetre, setSelectedFenetre] = useState<Fenetre | null>(null);
 
   const fetchFenetres = async (page: number) => {
     setLoading(true);
@@ -52,6 +54,14 @@ export default function FenetresList() {
     setCurrentPage(page);
   };
 
+  const handleFenetreClick = (fenetre: Fenetre) => {
+    setSelectedFenetre(fenetre);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedFenetre(null);
+  };
+
   if (loading) return <div className="p-6">Chargement...</div>;
   if (!fenetresData || !fenetresData.data) return <div className="p-6">Erreur de chargement</div>;
 
@@ -69,7 +79,11 @@ export default function FenetresList() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {fenetresData.data.map((fenetre) => (
-          <div key={fenetre.id} className="border rounded-lg p-4 shadow-md">
+          <div 
+            key={fenetre.id} 
+            className="border rounded-lg p-4 shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => handleFenetreClick(fenetre)}
+          >
             <h3 className="text-xl font-semibold mb-2">{fenetre.type}</h3>
             <div className="space-y-1 text-gray-600">
               <p>Dimensions: {fenetre.largeur} x {fenetre.hauteur} cm</p>
@@ -83,6 +97,11 @@ export default function FenetresList() {
         currentPage={fenetresData.pagination.currentPage}
         totalPages={fenetresData.pagination.totalPages}
         onPageChange={handlePageChange}
+      />
+
+      <FenetrePopup
+        fenetre={selectedFenetre}
+        onClose={handleClosePopup}
       />
     </div>
   );
