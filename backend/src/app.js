@@ -11,7 +11,8 @@ const cors = require("cors");
 app.use(
   cors({
     origin: [
-      process.env.FRONTEND_URL, // keep this one, after checking the value in `backend/.env`
+      process.env.FRONTEND_URL || "http://localhost:3000",
+      "http://localhost:3000", // Next.js par défaut
       "http://mysite.com",
       "http://another-domain.com",
     ],
