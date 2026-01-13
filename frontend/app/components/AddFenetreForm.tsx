@@ -1,12 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '../contexts/UserContext';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 // Import des types depuis le dossier types centralisé
 import { AddFenetreFormProps, FenetreFormState, InputChangeHandler, FormSubmitHandler } from '../types';
 
 // Composant formulaire pour ajouter une nouvelle fenêtre
 export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) {
+  const { token } = useAuth(); // Récupération du token depuis le contexte
+  
   // État pour stocker les données du formulaire
   const [formData, setFormData] = useState<FenetreFormState>({
     type: '',
@@ -20,14 +24,21 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
   // Gestionnaire de soumission du formulaire
   const handleSubmit: FormSubmitHandler = async (e) => {
     e.preventDefault(); // Empêcher le rechargement de la page
+    
+    if (!token) {
+      alert('Session expirée, veuillez vous reconnecter');
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
-      // Envoi des données à l'API backend
-      const res = await fetch('http://localhost:3001/api/fenetres', {
+      // Envoi des données à l'API backend avec authentification
+      const res = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.FENETRES.CREATE), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Ajout du token JWT
         },
         body: JSON.stringify({
           type: formData.type,
@@ -37,7 +48,12 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
         }),
       });
 
-      if (!res.ok) throw new Error('Erreur lors de la création');
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error('Session expirée, veuillez vous reconnecter');
+        }
+        throw new Error('Erreur lors de la création');
+      }
 
       // Réinitialiser le formulaire après succès
       setFormData({ type: '', largeur: '', hauteur: '', prix: '' });
@@ -45,7 +61,7 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
       onFenetreAdded();
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de la création');
+      alert(error instanceof Error ? error.message : 'Erreur lors de la création');
     } finally {
       setIsSubmitting(false);
     }
@@ -61,7 +77,7 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
 
   return (
     <div className="add-fenetre-form">
-      <h2 className="add-fenetre-form__title">Ajouter une fenêtre</h2>
+      <h2 className="add-fenetre-form__title">Ajouter une fenêtre à votre catalogue</h2>
       
       <form onSubmit={handleSubmit} className="add-fenetre-form__form">
         {/* Champ pour le type de fenêtre */}

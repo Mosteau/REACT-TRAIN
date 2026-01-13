@@ -1,6 +1,7 @@
 // Types pour les props des composants
 
 import { Fenetre, CreateFenetreData } from './entities/fenetre';
+import { LoginData, RegisterData } from './entities/user';
 
 // Props pour le composant FenetrePopup
 export interface FenetrePopupProps {
@@ -32,4 +33,37 @@ export interface LoadingProps {
 export interface CallbackProps {
   onSuccess?: () => void;
   onError?: (error: string) => void;
+}
+
+// Props pour le composant LoginForm
+export interface LoginFormProps {
+  onSuccess?: () => void;
+  onError?: (error: string) => void;
+}
+
+// Props pour le composant RegisterForm
+export interface RegisterFormProps {
+  onSuccess?: () => void;
+  onError?: (error: string) => void;
+}
+
+// État du formulaire de connexion
+export interface LoginFormState extends LoginData {
+  isSubmitting: boolean;
+}
+
+// État du formulaire d'inscription
+export interface RegisterFormState extends RegisterData {
+  confirmPassword: string;
+  isSubmitting: boolean;
+}
+
+// Props pour le contexte utilisateur
+export interface UserContextType {
+  user: any; // Sera typé plus précisément
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (credentials: LoginData) => Promise<void>;
+  register: (userData: RegisterData) => Promise<void>;
+  logout: () => void;
 }

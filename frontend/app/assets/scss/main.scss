@@ -1,7 +1,10 @@
 // Import all component styles
-@import 'variables';
-@import 'layout';
-@import 'fenetres-list';
-@import 'add-fenetre-form';
-@import 'fenetre-popup';
-@import 'loading';
+@use 'variables' as *;
+@use 'layout';
+@use 'header';
+@use 'footer';
+@use 'auth';
+@use 'fenetres-list';
+@use 'add-fenetre-form';
+@use 'fenetre-popup';
+@use 'loading';

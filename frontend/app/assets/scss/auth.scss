@@ -1,0 +1,235 @@
+// Styles pour les pages d'authentification (login et register)
+@use 'variables' as *;
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg-secondary;
+  padding: $space-4;
+
+  &__container {
+    background: $bg-primary;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-md;
+    width: 100%;
+    max-width: 400px;
+    padding: $space-8;
+  }
+
+  &__header {
+    text-align: center;
+    margin-bottom: $space-6;
+
+    .logo {
+      display: none;
+    }
+
+    h1 {
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-bold;
+      color: $text-primary;
+      margin-bottom: $space-2;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: $font-size-sm;
+    }
+
+    p a {
+      color: $primary-blue;
+      text-decoration: none;
+    }
+
+    p a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__form {
+    .error-alert {
+      background: rgba(220, 38, 38, 0.1);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      border-radius: $radius-md;
+      padding: $space-3;
+      margin-bottom: $space-4;
+      color: $danger-red;
+      font-size: $font-size-sm;
+    }
+
+    .form-group {
+      margin-bottom: $space-4;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: $font-weight-medium;
+      color: $text-primary;
+      margin-bottom: $space-2;
+      font-size: $font-size-sm;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: $space-3;
+      border: 1px solid $border-medium;
+      border-radius: $radius-md;
+      font-size: $font-size-base;
+      transition: border-color $transition-fast;
+    }
+
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: $primary-blue;
+    }
+
+    .input-wrapper input.error {
+      border-color: $danger-red;
+    }
+
+    .input-wrapper input.success {
+      border-color: $success-green;
+    }
+
+    .input-icon {
+      display: none;
+    }
+
+    .error-message {
+      color: $danger-red;
+      font-size: $font-size-xs;
+      margin-top: $space-1;
+    }
+
+    .help-text {
+      color: $text-muted;
+      font-size: $font-size-xs;
+      margin-top: $space-1;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: $space-3;
+      background: $primary-blue;
+      color: $text-white;
+      border: none;
+      border-radius: $radius-md;
+      font-size: $font-size-base;
+      font-weight: $font-weight-medium;
+      cursor: pointer;
+      transition: background $transition-fast;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: $space-2;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      background: $primary-blue-hover;
+    }
+
+    .submit-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .loading-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+  }
+
+  &__test-accounts {
+    margin-top: $space-6;
+    padding-top: $space-4;
+    border-top: 1px solid $border-light;
+
+    h3 {
+      font-size: $font-size-sm;
+      color: $text-secondary;
+      margin-bottom: $space-3;
+    }
+
+    .account-list {
+      display: flex;
+      flex-direction: column;
+      gap: $space-2;
+    }
+
+    .test-account {
+      padding: $space-2 $space-3;
+      background: $bg-secondary;
+      border-radius: $radius-sm;
+      cursor: pointer;
+      transition: background $transition-fast;
+    }
+
+    .test-account:hover {
+      background: $bg-tertiary;
+    }
+
+    .account-info {
+      font-size: $font-size-xs;
+      color: $text-secondary;
+      font-family: monospace;
+    }
+
+    .copy-button {
+      display: none;
+    }
+  }
+
+  &__divider {
+    text-align: center;
+    margin: $space-4 0;
+    position: relative;
+  }
+
+  &__divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: $border-light;
+  }
+
+  &__divider span {
+    background: $bg-primary;
+    padding: 0 $space-3;
+    color: $text-muted;
+    font-size: $font-size-sm;
+    position: relative;
+  }
+
+  &__link {
+    text-align: center;
+  }
+
+  &__link a {
+    color: $primary-blue;
+    font-weight: $font-weight-medium;
+    text-decoration: none;
+  }
+
+  &__link a:hover {
+    text-decoration: underline;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

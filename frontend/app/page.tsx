@@ -1,14 +1,16 @@
 import { Suspense } from 'react'
 import FenetresList from './components/FenetresList'
+import ProtectedRoute from './components/ProtectedRoute'
 import { FenetresLoading } from './components/Loading'
 
-// Page d'accueil de l'application
+// Page d'accueil de l'application - affiche la liste des fenêtres (protégée)
 export default function Page() {
   return (
-    // Suspense permet d'afficher un composant de chargement pendant que FenetresList se charge
-    <Suspense fallback={<FenetresLoading />}>
-      {/* Composant principal qui affiche le catalogue de fenêtres */}
-      <FenetresList />
-    </Suspense>
+    <ProtectedRoute>
+      <Suspense fallback={<FenetresLoading />}>
+        {/* Composant principal qui affiche le catalogue de fenêtres de l'utilisateur connecté */}
+        <FenetresList />
+      </Suspense>
+    </ProtectedRoute>
   )
 }

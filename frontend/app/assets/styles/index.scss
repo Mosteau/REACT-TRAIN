@@ -1,6 +1,7 @@
-@import './settings';
-@import './home';
-@import './simulator';
+// Fichier d'index des styles - Syntaxe moderne @use
+@use 'settings' as *;
+@use 'home';
+@use 'simulator';
 
 * {
   margin: 0;
