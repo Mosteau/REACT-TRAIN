@@ -5,6 +5,7 @@ class FenetreManager extends AbstractManager {
     super({ table: "fenetres" });
   }
 
+  // requête pour créer une fenêtre
   async create(fenetre) {
     const result = await this.database.run(
       "INSERT INTO fenetres (type, largeur, hauteur, prix) VALUES (?, ?, ?, ?)",
@@ -13,6 +14,7 @@ class FenetreManager extends AbstractManager {
     return result.insertId;
   }
 
+  // requête pour récupérer une fenêtre par id
   async read(id) {
     const [rows] = await this.database.query(
       "SELECT * FROM fenetres WHERE id = ?",
@@ -21,6 +23,7 @@ class FenetreManager extends AbstractManager {
     return rows[0];
   }
 
+  // requête pour mettre à jour une fenêtre
   async update(id, fenetre) {
     const result = await this.database.run(
       "UPDATE fenetres SET type = ?, largeur = ?, hauteur = ?, prix = ? WHERE id = ?",
@@ -29,6 +32,7 @@ class FenetreManager extends AbstractManager {
     return result.affectedRows;
   }
 
+  // requête pour supprimer une fenêtre par id
   async delete(id) {
     const result = await this.database.run(
       "DELETE FROM fenetres WHERE id = ?",
@@ -37,6 +41,7 @@ class FenetreManager extends AbstractManager {
     return result.affectedRows;
   }
 
+  // requête de pagination pour l'affiche de l'ensemble des produits
   async readAllPaginated(page = 1, limit = 6) {
     const offset = (page - 1) * limit;
     

@@ -1,6 +1,7 @@
 require("dotenv").config();
 const database = require("./database/client");
 
+// Création de données pour tests
 const seedData = async () => {
   try {
     const fenetres = [

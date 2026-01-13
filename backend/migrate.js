@@ -1,6 +1,9 @@
 require("dotenv").config();
+
+// Initialisation de la base de données
 const database = require("./database/client");
 
+// Fonction qui crée les tables
 const createTables = async () => {
   try {
     await database.run(`

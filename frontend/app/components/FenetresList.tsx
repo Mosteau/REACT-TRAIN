@@ -6,34 +6,18 @@ import FenetrePopup from './FenetrePopup';
 import AddFenetreForm from './AddFenetreForm';
 import '../assets/scss/main.scss';
 
-interface Fenetre {
-  id: number;
-  type: string;
-  largeur: number;
-  hauteur: number;
-  prix: number;
-  created_at: string;
-  updated_at: string;
-}
+// Import des types depuis le dossier types
+import { Fenetre, FenetresResponse } from '../types';
 
-interface FenetresResponse {
-  data: Fenetre[];
-  pagination: {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-    itemsPerPage: number;
-    hasNext: boolean;
-    hasPrev: boolean;
-  };
-}
-
+// Composant principal qui affiche la liste des fenêtres avec pagination
 export default function FenetresList() {
+  // États pour gérer les données et l'interface utilisateur
   const [fenetresData, setFenetresData] = useState<FenetresResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFenetre, setSelectedFenetre] = useState<Fenetre | null>(null);
 
+  // Fonction pour récupérer les fenêtres depuis l'API backend
   const fetchFenetres = async (page: number) => {
     setLoading(true);
     try {
@@ -48,14 +32,17 @@ export default function FenetresList() {
     }
   };
 
+  // Effect qui se déclenche quand la page courante change
   useEffect(() => {
     fetchFenetres(currentPage);
   }, [currentPage]);
 
+  // Gestionnaire pour changer de page dans la pagination
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
+  // Gestionnaire pour supprimer une fenêtre
   const handleDeleteFenetre = async (id: number) => {
     try {
       const res = await fetch(`http://localhost:3001/api/fenetres/${id}`, {
@@ -72,25 +59,32 @@ export default function FenetresList() {
     }
   };
 
+  // Gestionnaire appelé quand une nouvelle fenêtre est ajoutée
   const handleFenetreAdded = () => {
     fetchFenetres(currentPage);
   };
 
+  // Gestionnaire pour ouvrir la popup de détails d'une fenêtre
   const handleFenetreClick = (fenetre: Fenetre) => {
     setSelectedFenetre(fenetre);
   };
 
+  // Gestionnaire pour fermer la popup
   const handleClosePopup = () => {
     setSelectedFenetre(null);
   };
 
+  // Affichage conditionnel : état de chargement
   if (loading) return <div className="fenetres-list__loading">Chargement...</div>;
+  // Affichage conditionnel : erreur de chargement
   if (!fenetresData || !fenetresData.data) return <div className="fenetres-list__error">Erreur de chargement</div>;
 
   return (
     <div className="fenetres-list">
+      {/* Formulaire pour ajouter une nouvelle fenêtre */}
       <AddFenetreForm onFenetreAdded={handleFenetreAdded} />
       
+      {/* Grille des cartes de fenêtres */}
       <div className="fenetres-list__grid">
         {fenetresData.data.map((fenetre) => (
           <div 
@@ -107,12 +101,14 @@ export default function FenetresList() {
         ))}
       </div>
       
+      {/* Composant de pagination */}
       <Pagination
         currentPage={fenetresData.pagination.currentPage}
         totalPages={fenetresData.pagination.totalPages}
         onPageChange={handlePageChange}
       />
 
+      {/* Popup modale pour afficher les détails d'une fenêtre */}
       <FenetrePopup
         fenetre={selectedFenetre}
         onClose={handleClosePopup}

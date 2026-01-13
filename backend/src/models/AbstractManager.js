@@ -1,13 +1,13 @@
-// Import database client
+// Importation du client de base de données
 const database = require("../../database/client");
 
-// Provide database access through AbstractManager class
+// Fournir l'accès à la base de données via la classe AbstractManager
 class AbstractManager {
   constructor({ table }) {
-    // Store the table name
+    // Stocker le nom de la table
     this.table = table;
 
-    // Provide access to the database client
+    // Fournir l'accès au client de base de données
     this.database = database;
   }
 
@@ -17,5 +17,5 @@ class AbstractManager {
   }
 }
 
-// Ready to export
+// Prêt à exporter
 module.exports = AbstractManager;

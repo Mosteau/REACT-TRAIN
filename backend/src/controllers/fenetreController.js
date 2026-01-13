@@ -1,6 +1,7 @@
 const tables = require("../tables");
 
 const fenetreController = {
+  // Récupération de toutes les fenêtres avec pagination
   async getAll(req, res) {
     try {
       const page = parseInt(req.query.page) || 1;
@@ -13,6 +14,7 @@ const fenetreController = {
     }
   },
 
+  // Récupération d'une fenêtre par son ID
   async getById(req, res) {
     try {
       const fenetre = await tables.fenetres.read(req.params.id);
@@ -25,6 +27,7 @@ const fenetreController = {
     }
   },
 
+  // Création d'une nouvelle fenêtre
   async create(req, res) {
     try {
       const id = await tables.fenetres.create(req.body);
@@ -34,6 +37,7 @@ const fenetreController = {
     }
   },
 
+  // Mise à jour d'une fenêtre existante
   async update(req, res) {
     try {
       const affectedRows = await tables.fenetres.update(req.params.id, req.body);
@@ -46,6 +50,7 @@ const fenetreController = {
     }
   },
 
+  // Suppression d'une fenêtre par son ID
   async delete(req, res) {
     try {
       const affectedRows = await tables.fenetres.delete(req.params.id);

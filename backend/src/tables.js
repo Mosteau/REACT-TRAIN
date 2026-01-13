@@ -1,20 +1,20 @@
 /* ************************************************************************* */
-// Register Data Managers for Tables
+// Enregistrement des Gestionnaires de Données pour les Tables
 /* ************************************************************************* */
 
-// Import the manager modules responsible for handling data operations on the tables
+// Importer les modules de gestionnaires responsables des opérations de données sur les tables
 
 const FenetreManager = require("./models/FenetreManager");
 
 const managers = [
   FenetreManager,
-  // Add other managers here
+  // Ajouter d'autres gestionnaires ici
 ];
 
-// Create an empty object to hold data managers for different tables
+// Créer un objet vide pour contenir les gestionnaires de données des différentes tables
 const tables = {};
 
-// Register each manager as data access point for its table
+// Enregistrer chaque gestionnaire comme point d'accès aux données pour sa table
 managers.forEach((ManagerClass) => {
   const manager = new ManagerClass();
 
@@ -23,17 +23,17 @@ managers.forEach((ManagerClass) => {
 
 /* ************************************************************************* */
 
-// Use a Proxy to customize error messages when trying to access a non-existing table
+// Utiliser un Proxy pour personnaliser les messages d'erreur lors de l'accès à une table inexistante
 
-// Export the Proxy instance with custom error handling
+// Exporter l'instance Proxy avec gestion d'erreurs personnalisée
 module.exports = new Proxy(tables, {
   get(obj, prop) {
-    // Check if the property (table) exists in the tables object
+    // Vérifier si la propriété (table) existe dans l'objet tables
     if (prop in obj) return obj[prop];
 
-    // If the property (table) does not exist, throw a ReferenceError with a custom error message
+    // Si la propriété (table) n'existe pas, lever une ReferenceError avec un message d'erreur personnalisé
     throw new ReferenceError(
-      `tables.${prop} is not defined. Did you register it in ${__filename}?`
+      `tables.${prop} n'est pas défini. L'avez-vous enregistré dans ${__filename} ?`
     );
   },
 });

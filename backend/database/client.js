@@ -1,10 +1,13 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = path.join(__dirname, 'fenetre_db.sqlite');
+// Permettre la configuration du chemin de la base de données via une variable d'environnement
+const dbPath = process.env.DB_PATH || path.join(__dirname, 'fenetre_db.sqlite');
 const database = new sqlite3.Database(dbPath);
 
-// Promisify database methods
+// Promisifier les méthodes de base de données pour utiliser async/await
+
+// Fonction pour exécuter des requêtes SELECT (lecture)
 const query = (sql, params = []) => {
   return new Promise((resolve, reject) => {
     database.all(sql, params, (err, rows) => {
@@ -14,6 +17,7 @@ const query = (sql, params = []) => {
   });
 };
 
+// Fonction pour exécuter des requêtes INSERT/UPDATE/DELETE (écriture)
 const run = (sql, params = []) => {
   return new Promise((resolve, reject) => {
     database.run(sql, params, function(err) {

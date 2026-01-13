@@ -2,24 +2,28 @@
 
 import { useState } from 'react';
 
-interface AddFenetreFormProps {
-  onFenetreAdded: () => void;
-}
+// Import des types depuis le dossier types centralisé
+import { AddFenetreFormProps, FenetreFormState, InputChangeHandler, FormSubmitHandler } from '../types';
 
+// Composant formulaire pour ajouter une nouvelle fenêtre
 export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) {
-  const [formData, setFormData] = useState({
+  // État pour stocker les données du formulaire
+  const [formData, setFormData] = useState<FenetreFormState>({
     type: '',
     largeur: '',
     hauteur: '',
     prix: ''
   });
+  // État pour gérer l'état de soumission (éviter les doubles clics)
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Gestionnaire de soumission du formulaire
+  const handleSubmit: FormSubmitHandler = async (e) => {
+    e.preventDefault(); // Empêcher le rechargement de la page
     setIsSubmitting(true);
 
     try {
+      // Envoi des données à l'API backend
       const res = await fetch('http://localhost:3001/api/fenetres', {
         method: 'POST',
         headers: {
@@ -27,16 +31,17 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
         },
         body: JSON.stringify({
           type: formData.type,
-          largeur: parseInt(formData.largeur),
-          hauteur: parseInt(formData.hauteur),
-          prix: parseFloat(formData.prix)
+          largeur: parseInt(formData.largeur),   // Conversion en nombre entier
+          hauteur: parseInt(formData.hauteur),   // Conversion en nombre entier
+          prix: parseFloat(formData.prix)        // Conversion en nombre décimal
         }),
       });
 
       if (!res.ok) throw new Error('Erreur lors de la création');
 
-      // Reset form
+      // Réinitialiser le formulaire après succès
       setFormData({ type: '', largeur: '', hauteur: '', prix: '' });
+      // Notifier le composant parent pour recharger la liste
       onFenetreAdded();
     } catch (error) {
       console.error('Erreur:', error);
@@ -46,7 +51,8 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Gestionnaire pour mettre à jour les champs du formulaire
+  const handleChange: InputChangeHandler = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -58,6 +64,7 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
       <h2 className="add-fenetre-form__title">Ajouter une fenêtre</h2>
       
       <form onSubmit={handleSubmit} className="add-fenetre-form__form">
+        {/* Champ pour le type de fenêtre */}
         <div className="add-fenetre-form__field">
           <label>Type</label>
           <input
@@ -70,6 +77,7 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
           />
         </div>
 
+        {/* Grille pour largeur et hauteur côte à côte */}
         <div className="add-fenetre-form__grid">
           <div className="add-fenetre-form__field">
             <label>Largeur (cm)</label>
@@ -95,6 +103,7 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
           </div>
         </div>
 
+        {/* Champ pour le prix */}
         <div className="add-fenetre-form__field">
           <label>Prix (€)</label>
           <input
@@ -104,10 +113,11 @@ export default function AddFenetreForm({ onFenetreAdded }: AddFenetreFormProps) 
             onChange={handleChange}
             required
             min="0"
-            step="0.01"
+            step="0.01" // Permet les centimes
           />
         </div>
 
+        {/* Bouton de soumission avec état de chargement */}
         <button
           type="submit"
           disabled={isSubmitting}

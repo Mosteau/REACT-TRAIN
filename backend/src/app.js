@@ -1,4 +1,4 @@
-// Load the express module to create a web application
+// Charger le module express pour créer une application web
 
 const express = require("express");
 const path = require("path");
@@ -10,12 +10,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL || "http://localhost:3000",
-      "http://localhost:3000", // Next.js par défaut
-      "http://mysite.com",
-      "http://another-domain.com",
-    ],
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
   })
 );
 
@@ -24,12 +19,12 @@ app.use(express.static("./public"));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 
-// Import the API routes from the router module
+// Importer les routes API depuis le module router
 const router = require("./router");
 
 app.use("/images", express.static("images"));
 
-// Mount the API routes under the "/api" endpoint
+// Monter les routes API sous le point de terminaison "/api"
 app.use("/api", router);
 
 
