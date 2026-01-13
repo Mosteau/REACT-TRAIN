@@ -14,9 +14,9 @@ export interface ApiError {
 }
 
 // Type pour les réponses de création (retourne l'objet créé avec son ID)
-export interface CreateResponse<T> extends T {
+export type CreateResponse<T> = T & {
   id: number;
-}
+};
 
 // États de chargement pour les composants
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';

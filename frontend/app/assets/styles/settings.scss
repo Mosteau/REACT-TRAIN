@@ -5,6 +5,10 @@ $accent-color: #e74c3c;
 $text-color: #333;
 $background-color: #f8f9fa;
 
+// Couleurs hover (pré-calculées pour éviter darken() déprécié)
+$secondary-color-hover: #217dbb;
+$accent-color-hover: #c0392b;
+
 // Breakpoints
 $mobile: 768px;
 $tablet: 1024px;

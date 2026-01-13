@@ -4,6 +4,7 @@
 // Réexport des types d'entités
 export * from './entities/fenetre';
 export * from './entities/pagination';
+export * from './entities/user';
 
 // Réexport des types API
 export * from './api';

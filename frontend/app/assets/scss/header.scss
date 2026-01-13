@@ -1,0 +1,177 @@
+// Styles pour le Header - Design moderne
+@use 'variables' as *;
+
+.header {
+  background: $bg-primary;
+  border-bottom: 1px solid $border-light;
+  box-shadow: $shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  
+  &__container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 $space-6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+  }
+  
+  &__logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $primary-blue;
+  }
+  
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: $space-6;
+    
+    .nav-link {
+      color: $text-secondary;
+      text-decoration: none;
+      font-weight: $font-weight-medium;
+      font-size: $font-size-base;
+      padding: $space-2 $space-3;
+      border-radius: $radius-md;
+      transition: all $transition-fast;
+      
+      &:hover {
+        color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+      }
+      
+      &.active {
+        color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+      }
+    }
+  }
+  
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: $space-3;
+      
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        background: $primary-blue;
+        border-radius: $radius-full;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $text-white;
+        font-weight: $font-weight-semibold;
+        font-size: $font-size-sm;
+      }
+      
+      .user-details {
+        .user-greeting {
+          font-size: $font-size-xs;
+          color: $text-muted;
+        }
+        
+        .user-name {
+          font-size: $font-size-base;
+          font-weight: $font-weight-semibold;
+          color: $text-primary;
+        }
+      }
+    }
+    
+    .logout-btn {
+      padding: $space-2 $space-4;
+      background: rgba($danger-red, 0.1);
+      color: $danger-red;
+      border: 1px solid rgba($danger-red, 0.2);
+      border-radius: $radius-md;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      cursor: pointer;
+      transition: all $transition-fast;
+      
+      &:hover {
+        background: $danger-red;
+        color: $text-white;
+        border-color: $danger-red;
+      }
+    }
+  }
+  
+  &__auth {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    
+    .auth-link {
+      color: $text-secondary;
+      text-decoration: none;
+      font-weight: $font-weight-medium;
+      font-size: $font-size-base;
+      padding: $space-2 $space-4;
+      border-radius: $radius-md;
+      transition: all $transition-fast;
+      
+      &:hover {
+        color: #667eea;
+      }
+    }
+    
+    .auth-btn {
+      padding: $space-2 $space-5;
+      background: $primary-blue;
+      color: $text-white;
+      border: none;
+      border-radius: $radius-md;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background $transition-fast;
+      
+      &:hover {
+        background: $primary-blue-hover;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: $breakpoint-md) {
+  .header {
+    &__container {
+      padding: 0 $space-4;
+      height: 60px;
+    }
+    
+    &__logo {
+      .logo-text {
+        display: none;
+      }
+    }
+    
+    &__nav {
+      display: none;
+    }
+    
+    &__user {
+      .user-info {
+        .user-details {
+          display: none;
+        }
+      }
+    }
+  }
+}

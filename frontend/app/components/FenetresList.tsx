@@ -4,25 +4,37 @@ import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
 import FenetrePopup from './FenetrePopup';
 import AddFenetreForm from './AddFenetreForm';
-import '../assets/scss/main.scss';
-
-// Import des types depuis le dossier types
+import { useAuth } from '../contexts/UserContext';
 import { Fenetre, FenetresResponse } from '../types';
+import { buildApiUrl, API_CONFIG } from '../config/api';
+import '../assets/scss/fenetres-list.scss';
 
 // Composant principal qui affiche la liste des fenêtres avec pagination
 export default function FenetresList() {
-  // États pour gérer les données et l'interface utilisateur
+  const { token, user } = useAuth();
+  
   const [fenetresData, setFenetresData] = useState<FenetresResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedFenetre, setSelectedFenetre] = useState<Fenetre | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
-  // Fonction pour récupérer les fenêtres depuis l'API backend
   const fetchFenetres = async (page: number) => {
+    if (!token) return;
+    
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:3001/api/fenetres?page=${page}&limit=6`);
-      if (!res.ok) throw new Error('Erreur lors du chargement');
+      const res = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.FENETRES.LIST}?page=${page}&limit=6`), {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!res.ok) {
+        throw new Error('Erreur lors du chargement');
+      }
+      
       const data = await res.json();
       setFenetresData(data);
     } catch (error) {
@@ -32,25 +44,31 @@ export default function FenetresList() {
     }
   };
 
-  // Effect qui se déclenche quand la page courante change
   useEffect(() => {
-    fetchFenetres(currentPage);
-  }, [currentPage]);
+    if (token) {
+      fetchFenetres(currentPage);
+    }
+  }, [currentPage, token]);
 
-  // Gestionnaire pour changer de page dans la pagination
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  // Gestionnaire pour supprimer une fenêtre
   const handleDeleteFenetre = async (id: number) => {
+    if (!token) return;
+    
     try {
-      const res = await fetch(`http://localhost:3001/api/fenetres/${id}`, {
+      const res = await fetch(buildApiUrl(API_CONFIG.ENDPOINTS.FENETRES.DELETE(id)), {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       });
-      if (!res.ok) throw new Error('Erreur lors de la suppression');
       
-      // Fermer la popup et recharger les données
+      if (!res.ok) {
+        throw new Error('Erreur lors de la suppression');
+      }
+      
       setSelectedFenetre(null);
       fetchFenetres(currentPage);
     } catch (error) {
@@ -59,61 +77,110 @@ export default function FenetresList() {
     }
   };
 
-  // Gestionnaire appelé quand une nouvelle fenêtre est ajoutée
   const handleFenetreAdded = () => {
+    setShowAddForm(false);
     fetchFenetres(currentPage);
   };
 
-  // Gestionnaire pour ouvrir la popup de détails d'une fenêtre
-  const handleFenetreClick = (fenetre: Fenetre) => {
-    setSelectedFenetre(fenetre);
-  };
-
-  // Gestionnaire pour fermer la popup
-  const handleClosePopup = () => {
-    setSelectedFenetre(null);
-  };
-
-  // Affichage conditionnel : état de chargement
-  if (loading) return <div className="fenetres-list__loading">Chargement...</div>;
-  // Affichage conditionnel : erreur de chargement
-  if (!fenetresData || !fenetresData.data) return <div className="fenetres-list__error">Erreur de chargement</div>;
+  if (loading) {
+    return (
+      <div className="fenetres-page">
+        <div className="fenetres-page__loading">
+          <div className="loading-spinner"></div>
+          <p>Chargement de vos fenêtres...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="fenetres-list">
-      {/* Formulaire pour ajouter une nouvelle fenêtre */}
-      <AddFenetreForm onFenetreAdded={handleFenetreAdded} />
-      
-      {/* Grille des cartes de fenêtres */}
-      <div className="fenetres-list__grid">
-        {fenetresData.data.map((fenetre) => (
-          <div 
-            key={fenetre.id} 
-            className="fenetres-list__card"
-            onClick={() => handleFenetreClick(fenetre)}
-          >
-            <h3>{fenetre.type}</h3>
-            <div className="fenetres-list__card-details">
-              <p>Dimensions: {fenetre.largeur} x {fenetre.hauteur} cm</p>
-              <p className="price">{fenetre.prix}€</p>
-            </div>
+    <div className="fenetres-page">
+      <div className="fenetres-page__container">
+        {/* En-tête avec message de bienvenue */}
+        <div className="fenetres-page__header">
+          <div className="header-content">
+            <h1>Bonjour {user?.prenom}</h1>
+            <p>
+              Voici votre catalogue personnel de fenêtres 
+              ({fenetresData?.pagination.totalItems || 0} fenêtre{(fenetresData?.pagination.totalItems || 0) > 1 ? 's' : ''})
+            </p>
           </div>
-        ))}
-      </div>
-      
-      {/* Composant de pagination */}
-      <Pagination
-        currentPage={fenetresData.pagination.currentPage}
-        totalPages={fenetresData.pagination.totalPages}
-        onPageChange={handlePageChange}
-      />
+          <button 
+            className="add-btn"
+            onClick={() => setShowAddForm(!showAddForm)}
+          >
+            {showAddForm ? '✕ Fermer' : '+ Ajouter une fenêtre'}
+          </button>
+        </div>
 
-      {/* Popup modale pour afficher les détails d'une fenêtre */}
-      <FenetrePopup
-        fenetre={selectedFenetre}
-        onClose={handleClosePopup}
-        onDelete={handleDeleteFenetre}
-      />
+        {/* Formulaire d'ajout (conditionnel) */}
+        {showAddForm && (
+          <div className="fenetres-page__form-section">
+            <AddFenetreForm onFenetreAdded={handleFenetreAdded} />
+          </div>
+        )}
+
+        {/* Grille des fenêtres */}
+        {fenetresData && fenetresData.data.length > 0 ? (
+          <>
+            <div className="fenetres-grid">
+              {fenetresData.data.map((fenetre, index) => (
+                <div 
+                  key={fenetre.id} 
+                  className="fenetre-card"
+                  onClick={() => setSelectedFenetre(fenetre)}
+                >
+                  <div className="fenetre-card__content">
+                    <h3 className="fenetre-card__title">{fenetre.type}</h3>
+                    <div className="fenetre-card__dimensions">
+                      <span className="dimension">
+                        <span className="label">Largeur</span>
+                        <span className="value">{fenetre.largeur} cm</span>
+                      </span>
+                      <span className="dimension">
+                        <span className="label">Hauteur</span>
+                        <span className="value">{fenetre.hauteur} cm</span>
+                      </span>
+                    </div>
+                    <div className="fenetre-card__price">
+                      <span className="price-value">{fenetre.prix}</span>
+                      <span className="price-currency">€</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {fenetresData.pagination.totalPages > 1 && (
+              <Pagination
+                currentPage={fenetresData.pagination.currentPage}
+                totalPages={fenetresData.pagination.totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </>
+        ) : (
+          /* État vide */
+          <div className="fenetres-page__empty">
+            <h2>Aucune fenêtre dans votre catalogue</h2>
+            <p>Commencez par ajouter votre première fenêtre !</p>
+            <button 
+              className="empty-btn"
+              onClick={() => setShowAddForm(true)}
+            >
+              + Ajouter ma première fenêtre
+            </button>
+          </div>
+        )}
+
+        {/* Popup de détails */}
+        <FenetrePopup
+          fenetre={selectedFenetre}
+          onClose={() => setSelectedFenetre(null)}
+          onDelete={handleDeleteFenetre}
+        />
+      </div>
     </div>
   );
 }
