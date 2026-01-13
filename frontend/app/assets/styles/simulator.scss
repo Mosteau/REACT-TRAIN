@@ -1,3 +1,6 @@
+// Styles pour la page simulateur
+@use 'settings' as *;
+
 .simulator {
   padding: $spacing-lg;
   background-color: $background-color;
@@ -25,7 +28,7 @@
     transition: background-color 0.3s;
 
     &:hover {
-      background-color: darken($accent-color, 10%);
+      background-color: $accent-color-hover;
     }
   }
 }

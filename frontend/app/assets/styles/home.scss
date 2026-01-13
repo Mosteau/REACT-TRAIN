@@ -1,3 +1,6 @@
+// Styles pour la page d'accueil
+@use 'settings' as *;
+
 .home {
   padding: $spacing-lg;
   text-align: center;
@@ -27,7 +30,7 @@
     transition: background-color 0.3s;
 
     &:hover {
-      background-color: darken($secondary-color, 10%);
+      background-color: $secondary-color-hover;
     }
   }
 }

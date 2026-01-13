@@ -1,0 +1,73 @@
+// Styles pour le Footer - Design moderne
+@use 'variables' as *;
+
+.footer {
+  background: $gray-900;
+  color: $gray-400;
+  padding: $space-8 0;
+  margin-top: auto;
+  
+  &__container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 $space-6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    @media (max-width: $breakpoint-md) {
+      flex-direction: column;
+      gap: $space-4;
+      text-align: center;
+    }
+  }
+  
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    
+    .brand-icon {
+      font-size: 1.5rem;
+    }
+    
+    .brand-text {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $text-white;
+    }
+  }
+  
+  &__copyright {
+    font-size: $font-size-sm;
+    
+    a {
+      color: #667eea;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  &__links {
+    display: flex;
+    gap: $space-6;
+    
+    a {
+      color: $gray-400;
+      text-decoration: none;
+      font-size: $font-size-sm;
+      transition: color $transition-fast;
+      
+      &:hover {
+        color: $text-white;
+      }
+    }
+    
+    @media (max-width: $breakpoint-md) {
+      gap: $space-4;
+    }
+  }
+}

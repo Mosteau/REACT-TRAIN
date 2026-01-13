@@ -1,53 +1,79 @@
-@import 'variables';
+// Styles pour le formulaire d'ajout - Design simple
+@use 'variables' as *;
 
 .add-fenetre-form {
-  @include card;
-  margin-bottom: 1.5rem;
-
+  background: $bg-primary;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-light;
+  padding: $space-5;
+  margin-bottom: $space-6;
+  
   &__title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+    margin-bottom: $space-4;
   }
-
+  
   &__form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: $space-4;
   }
-
-  &__field {
-    label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-    }
-
-    input {
-      @include input-base;
-
-      &::placeholder {
-        color: #9ca3af;
-      }
-    }
-  }
-
+  
   &__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: $space-3;
+    
+    @media (max-width: $breakpoint-sm) {
+      grid-template-columns: 1fr;
+    }
   }
-
+  
+  &__field {
+    label {
+      display: block;
+      font-weight: $font-weight-medium;
+      color: $text-primary;
+      margin-bottom: $space-2;
+      font-size: $font-size-sm;
+    }
+    
+    input {
+      width: 100%;
+      padding: $space-3;
+      border: 1px solid $border-medium;
+      border-radius: $radius-md;
+      font-size: $font-size-base;
+      transition: border-color $transition-fast;
+      
+      &:focus {
+        outline: none;
+        border-color: $primary-blue;
+      }
+    }
+  }
+  
   &__submit {
-    @include button-base;
-    background-color: $success-color;
-    color: $white;
-    width: 100%;
-    padding: 0.75rem;
-
+    padding: $space-3;
+    background: $success-green;
+    color: $text-white;
+    border: none;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: background $transition-fast;
+    
     &:hover:not(:disabled) {
-      background-color: $success-hover;
+      background: $success-green-light;
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
   }
 }
