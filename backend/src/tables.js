@@ -5,10 +5,11 @@
 // Importer les modules de gestionnaires responsables des opérations de données sur les tables
 
 const FenetreManager = require("./models/FenetreManager");
+const UserManager = require("./models/UserManager");
 
 const managers = [
   FenetreManager,
-  // Ajouter d'autres gestionnaires ici
+  UserManager,
 ];
 
 // Créer un objet vide pour contenir les gestionnaires de données des différentes tables

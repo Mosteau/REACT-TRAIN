@@ -5,53 +5,54 @@ class FenetreManager extends AbstractManager {
     super({ table: "fenetres" });
   }
 
-  // requête pour créer une fenêtre
-  async create(fenetre) {
+  // Création d'une fenêtre associée à un utilisateur
+  async create(fenetre, userId) {
     const result = await this.database.run(
-      "INSERT INTO fenetres (type, largeur, hauteur, prix) VALUES (?, ?, ?, ?)",
-      [fenetre.type, fenetre.largeur, fenetre.hauteur, fenetre.prix]
+      "INSERT INTO fenetres (type, largeur, hauteur, prix, user_id) VALUES (?, ?, ?, ?, ?)",
+      [fenetre.type, fenetre.largeur, fenetre.hauteur, fenetre.prix, userId]
     );
     return result.insertId;
   }
 
-  // requête pour récupérer une fenêtre par id
-  async read(id) {
+  // Récupération d'une fenêtre par ID (avec vérification du propriétaire)
+  async read(id, userId) {
     const [rows] = await this.database.query(
-      "SELECT * FROM fenetres WHERE id = ?",
-      [id]
+      "SELECT * FROM fenetres WHERE id = ? AND user_id = ?",
+      [id, userId]
     );
     return rows[0];
   }
 
-  // requête pour mettre à jour une fenêtre
-  async update(id, fenetre) {
+  // Mise à jour d'une fenêtre (avec vérification du propriétaire)
+  async update(id, fenetre, userId) {
     const result = await this.database.run(
-      "UPDATE fenetres SET type = ?, largeur = ?, hauteur = ?, prix = ? WHERE id = ?",
-      [fenetre.type, fenetre.largeur, fenetre.hauteur, fenetre.prix, id]
+      "UPDATE fenetres SET type = ?, largeur = ?, hauteur = ?, prix = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?",
+      [fenetre.type, fenetre.largeur, fenetre.hauteur, fenetre.prix, id, userId]
     );
     return result.affectedRows;
   }
 
-  // requête pour supprimer une fenêtre par id
-  async delete(id) {
+  // Suppression d'une fenêtre (avec vérification du propriétaire)
+  async delete(id, userId) {
     const result = await this.database.run(
-      "DELETE FROM fenetres WHERE id = ?",
-      [id]
+      "DELETE FROM fenetres WHERE id = ? AND user_id = ?",
+      [id, userId]
     );
     return result.affectedRows;
   }
 
-  // requête de pagination pour l'affiche de l'ensemble des produits
-  async readAllPaginated(page = 1, limit = 6) {
+  // Pagination des fenêtres pour un utilisateur spécifique
+  async readAllPaginated(userId, page = 1, limit = 6) {
     const offset = (page - 1) * limit;
     
     const [rows] = await this.database.query(
-      "SELECT * FROM fenetres LIMIT ? OFFSET ?",
-      [limit, offset]
+      "SELECT * FROM fenetres WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?",
+      [userId, limit, offset]
     );
     
     const [countResult] = await this.database.query(
-      "SELECT COUNT(*) as total FROM fenetres"
+      "SELECT COUNT(*) as total FROM fenetres WHERE user_id = ?",
+      [userId]
     );
     
     const total = countResult[0].total;
@@ -68,6 +69,24 @@ class FenetreManager extends AbstractManager {
         hasPrev: page > 1
       }
     };
+  }
+
+  // Récupération de toutes les fenêtres d'un utilisateur (sans pagination)
+  async readAllByUser(userId) {
+    const [rows] = await this.database.query(
+      "SELECT * FROM fenetres WHERE user_id = ? ORDER BY created_at DESC",
+      [userId]
+    );
+    return rows;
+  }
+
+  // Comptage des fenêtres d'un utilisateur
+  async countByUser(userId) {
+    const [rows] = await this.database.query(
+      "SELECT COUNT(*) as count FROM fenetres WHERE user_id = ?",
+      [userId]
+    );
+    return rows[0].count;
   }
 }
 
